@@ -40,17 +40,17 @@ docker-compose down -v
 
 ## 🌐 URLs de Acesso
 
-| Serviço | URL | Descrição |
-|---------|-----|-----------|
-| **Kafka UI** | http://localhost:8080 | Interface para Kafka |
-| **Grafana** | http://localhost:3000 | Dashboards (admin/admin) |
-| **Prometheus** | http://localhost:9090 | Métricas |
-| **Jaeger** | http://localhost:16686 | Tracing distribuído |
+| Serviço | URL | Descrição                     |
+|---------|-----|-------------------------------|
+| **Kafka UI** | http://localhost:8080 | Interface para Kafka          |
+| **Grafana** | http://localhost:3000 | Dashboards (admin/admin)      |
+| **Prometheus** | http://localhost:9090 | Métricas                      |
+| **Jaeger** | http://localhost:16686 | Tracing distribuído (removido temporariamente)          |
 | **Restaurants API** | http://localhost:8081 | Microsserviço de Restaurantes |
-| **Orders API** | http://localhost:8082 | Microsserviço de Pedidos |
+| **Orders API** | http://localhost:8082 | Microsserviço de Pedidos      |
 | **Delivery API** | http://localhost:8083 | Microsserviço de Entregadores |
-| **Payments API** | http://localhost:8084 | Microsserviço de Pagamentos |
-| **BFF Mobile** | http://localhost:8085 | Backend for Frontend |
+| **Payments API** | http://localhost:8084 | Microsserviço de Pagamentos   |
+| **BFF Mobile** | http://localhost:8085 | Backend for Frontend          |
 
 ## 📱 Testando a API
 

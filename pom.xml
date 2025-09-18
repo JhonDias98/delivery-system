@@ -41,7 +41,6 @@
 
         <!-- Observability -->
         <micrometer.version>1.12.0</micrometer.version>
-        <opentelemetry.version>1.32.0</opentelemetry.version>
 
         <!-- Testing -->
         <junit.version>5.10.1</junit.version>

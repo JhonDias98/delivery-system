@@ -13,5 +13,5 @@ RUN mvn -q -B -DskipTests -f orders-service/pom.xml clean package spring-boot:re
 FROM amazoncorretto:21-alpine-jdk
 WORKDIR /app
 COPY --from=build /build/orders-service/target/orders-service-1.0.0-SNAPSHOT.jar app.jar
-EXPOSE 8081
+EXPOSE 8082
 ENTRYPOINT ["java", "-jar", "app.jar"]
