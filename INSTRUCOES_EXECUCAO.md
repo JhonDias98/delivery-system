@@ -3,7 +3,13 @@
 ## ⚡ Execução Rápida
 
 # 1. Executar o script de inicialização
+```bash
 ./start.sh
+```
+
+# 2. Criar tópicos Kafka (após o sistema estar rodando)
+```bash
+./infrastructure/kafka-topics/create-topics.sh
 ```
 
 ## 📋 Pré-requisitos

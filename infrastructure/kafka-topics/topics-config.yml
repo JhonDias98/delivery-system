@@ -1,0 +1,244 @@
+topics:
+  # === EVENTOS DE DOMÍNIO ===
+
+  # Restaurant Service Events
+  restaurant_events:
+    - name: "restaurant-created-events"
+      description: "Eventos de criação de restaurante"
+      partitions: 3
+      replication_factor: 1
+      retention_ms: 604800000  # 7 dias
+
+    - name: "restaurant-activated-events"
+      description: "Eventos de ativação de restaurante"
+      partitions: 3
+      replication_factor: 1
+      retention_ms: 604800000
+
+    - name: "restaurant-deactivated-events"
+      description: "Eventos de desativação de restaurante"
+      partitions: 3
+      replication_factor: 1
+      retention_ms: 604800000
+
+    - name: "menu-updated-events"
+      description: "Eventos de atualização de menu"
+      partitions: 3
+      replication_factor: 1
+      retention_ms: 604800000
+
+    - name: "restaurant-rating-updated-events"
+      description: "Eventos de atualização de avaliação"
+      partitions: 3
+      replication_factor: 1
+      retention_ms: 604800000
+
+  # Order Service Events
+  order_events:
+    - name: "order-created-events"
+      description: "Eventos de criação de pedido"
+      partitions: 3
+      replication_factor: 1
+      retention_ms: 2592000000  # 30 dias
+
+    - name: "order-confirmed-events"
+      description: "Eventos de confirmação de pedido"
+      partitions: 3
+      replication_factor: 1
+      retention_ms: 2592000000
+
+    - name: "order-cancelled-events"
+      description: "Eventos de cancelamento de pedido"
+      partitions: 3
+      replication_factor: 1
+      retention_ms: 2592000000
+
+    - name: "order-completed-events"
+      description: "Eventos de conclusão de pedido"
+      partitions: 3
+      replication_factor: 1
+      retention_ms: 2592000000
+
+  # Delivery Service Events
+  delivery_events:
+    - name: "delivery-allocated-events"
+      description: "Eventos de alocação de entrega"
+      partitions: 3
+      replication_factor: 1
+      retention_ms: 604800000
+
+    - name: "delivery-started-events"
+      description: "Eventos de início de entrega"
+      partitions: 3
+      replication_factor: 1
+      retention_ms: 604800000
+
+    - name: "delivery-completed-events"
+      description: "Eventos de conclusão de entrega"
+      partitions: 3
+      replication_factor: 1
+      retention_ms: 2592000000
+
+    - name: "delivery-cancelled-events"
+      description: "Eventos de cancelamento de entrega"
+      partitions: 3
+      replication_factor: 1
+      retention_ms: 604800000
+
+    - name: "delivery-person-location-updated-events"
+      description: "Eventos de atualização de localização do entregador"
+      partitions: 5
+      replication_factor: 1
+      retention_ms: 86400000  # 1 dia
+
+  # Payment Service Events
+  payment_events:
+    - name: "payment-created-events"
+      description: "Eventos de criação de pagamento"
+      partitions: 3
+      replication_factor: 1
+      retention_ms: 2592000000
+
+    - name: "payment-approved-events"
+      description: "Eventos de aprovação de pagamento"
+      partitions: 3
+      replication_factor: 1
+      retention_ms: 2592000000
+
+    - name: "payment-failed-events"
+      description: "Eventos de falha de pagamento"
+      partitions: 3
+      replication_factor: 1
+      retention_ms: 2592000000
+
+    - name: "payment-refunded-events"
+      description: "Eventos de estorno de pagamento"
+      partitions: 3
+      replication_factor: 1
+      retention_ms: 2592000000
+
+  # === EVENTOS DE SAGA ===
+
+  saga_events:
+    # Restaurant Saga
+    - name: "restaurant-validation-requested-events"
+      description: "Solicitações de validação de restaurante"
+      partitions: 3
+      replication_factor: 1
+      retention_ms: 604800000
+
+    - name: "restaurant-validation-successful-events"
+      description: "Validações de restaurante bem-sucedidas"
+      partitions: 3
+      replication_factor: 1
+      retention_ms: 604800000
+
+    - name: "restaurant-validation-failed-events"
+      description: "Falhas na validação de restaurante"
+      partitions: 3
+      replication_factor: 1
+      retention_ms: 604800000
+
+    - name: "restaurant-compensation-requested-events"
+      description: "Solicitações de compensação de restaurante"
+      partitions: 3
+      replication_factor: 1
+      retention_ms: 604800000
+
+    # Delivery Saga
+    - name: "delivery-allocation-requested-events"
+      description: "Solicitações de alocação de entrega"
+      partitions: 3
+      replication_factor: 1
+      retention_ms: 604800000
+
+    - name: "delivery-allocation-successful-events"
+      description: "Alocações de entrega bem-sucedidas"
+      partitions: 3
+      replication_factor: 1
+      retention_ms: 604800000
+
+    - name: "delivery-allocation-failed-events"
+      description: "Falhas na alocação de entrega"
+      partitions: 3
+      replication_factor: 1
+      retention_ms: 604800000
+
+    - name: "delivery-compensation-requested-events"
+      description: "Solicitações de compensação de entrega"
+      partitions: 3
+      replication_factor: 1
+      retention_ms: 604800000
+
+    # Payment Saga
+    - name: "payment-processing-requested-events"
+      description: "Solicitações de processamento de pagamento"
+      partitions: 3
+      replication_factor: 1
+      retention_ms: 604800000
+
+    - name: "payment-processing-successful-events"
+      description: "Processamentos de pagamento bem-sucedidos"
+      partitions: 3
+      replication_factor: 1
+      retention_ms: 604800000
+
+    - name: "payment-processing-failed-events"
+      description: "Falhas no processamento de pagamento"
+      partitions: 3
+      replication_factor: 1
+      retention_ms: 604800000
+
+    - name: "payment-compensation-requested-events"
+      description: "Solicitações de compensação de pagamento"
+      partitions: 3
+      replication_factor: 1
+      retention_ms: 604800000
+
+  # === TÓPICOS DE INTEGRAÇÃO ===
+
+  integration_topics:
+    - name: "delivery-system-dlq"
+      description: "Dead Letter Queue para mensagens com falha"
+      partitions: 3
+      replication_factor: 1
+      retention_ms: 2592000000  # 30 dias
+
+    - name: "audit-events"
+      description: "Eventos de auditoria do sistema"
+      partitions: 5
+      replication_factor: 1
+      retention_ms: 7776000000  # 90 dias
+
+    - name: "notification-events"
+      description: "Eventos de notificação para usuários"
+      partitions: 3
+      replication_factor: 1
+      retention_ms: 604800000  # 7 dias
+
+# Configurações gerais
+kafka_config:
+  default_partitions: 3
+  default_replication_factor: 1
+  cleanup_policy: "delete"
+  compression_type: "snappy"
+
+# Consumer Groups
+consumer_groups:
+  - name: "restaurant-service-group"
+    topics: ["order-created-events", "restaurant-validation-requested-events"]
+
+  - name: "order-service-group"
+    topics: ["restaurant-validation-successful-events", "restaurant-validation-failed-events",
+             "delivery-allocation-successful-events", "delivery-allocation-failed-events",
+             "payment-processing-successful-events", "payment-processing-failed-events"]
+
+  - name: "delivery-service-group"
+    topics: ["delivery-allocation-requested-events", "order-confirmed-events"]
+
+  - name: "payment-service-group"
+    topics: ["payment-processing-requested-events", "order-confirmed-events"]
+
+  - name: "notification-service-group"
+    topics: ["order-created-events", "order-confirmed-events", "order-completed-events",
+             "delivery-started-events", "delivery-completed-events", "payment-approved-events"]
