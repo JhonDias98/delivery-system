@@ -1,0 +1,171 @@
+spring:
+  application:
+    name: orders-service
+  
+  profiles:
+    active: local
+  
+  datasource:
+    url: jdbc:postgresql://localhost:5432/orders_db
+    username: orders_user
+    password: orders_pass
+    driver-class-name: org.postgresql.Driver
+  
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+  
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.add.type.headers: false
+    consumer:
+      group-id: orders-service
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+  
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+  
+  cache:
+    type: redis
+    redis:
+      time-to-live: 30m
+
+server:
+  port: 8082
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  tracing:
+    sampling:
+      probability: 1.0
+
+# Resilience4j Configuration
+resilience4j:
+  circuitbreaker:
+    instances:
+      default:
+        sliding-window-size: 10
+        minimum-number-of-calls: 5
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 30s
+        permitted-number-of-calls-in-half-open-state: 3
+      
+      saga-orchestrator:
+        sliding-window-size: 20
+        minimum-number-of-calls: 10
+        failure-rate-threshold: 30
+        wait-duration-in-open-state: 60s
+  
+  retry:
+    instances:
+      default:
+        max-attempts: 3
+        wait-duration: 1s
+        exponential-backoff-multiplier: 2
+      
+      saga-compensation:
+        max-attempts: 5
+        wait-duration: 2s
+        exponential-backoff-multiplier: 1.5
+  
+  timelimiter:
+    instances:
+      default:
+        timeout-duration: 5s
+      
+      saga-step:
+        timeout-duration: 10s
+
+# Logging
+logging:
+  level:
+    com.delivery.orders: DEBUG
+    org.springframework.kafka: INFO
+    org.hibernate.SQL: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+
+# Custom application properties
+app:
+  cache:
+    order-ttl: 1h
+    order-list-ttl: 15m
+  
+  saga:
+    timeout: 5m
+    max-compensation-attempts: 3
+    compensation-delay: 30s
+  
+  kafka:
+    topics:
+      # Outbound events (published by this service)
+      restaurant-validation-requested: saga.restaurant.validation.requested
+      delivery-allocation-requested: saga.delivery.allocation.requested
+      payment-processing-requested: saga.payment.processing.requested
+      restaurant-compensation-requested: saga.restaurant.compensation.requested
+      delivery-compensation-requested: saga.delivery.compensation.requested
+      payment-compensation-requested: saga.payment.compensation.requested
+      order-confirmed: order.confirmed
+      order-saga-failed: order.saga.failed
+      
+      # Inbound events (consumed by this service)
+      restaurant-validated: saga.restaurant.validated
+      restaurant-validation-failed: saga.restaurant.validation.failed
+      delivery-allocated: saga.delivery.allocated
+      delivery-allocation-failed: saga.delivery.allocation.failed
+      payment-processed: saga.payment.processed
+      payment-failed: saga.payment.failed
+      restaurant-compensated: saga.restaurant.compensated
+      delivery-compensated: saga.delivery.compensated
+      payment-compensated: saga.payment.compensated
+
+---
+# Docker profile
+spring:
+  config:
+    activate:
+      on-profile: docker
+  
+  datasource:
+    url: jdbc:postgresql://postgres:5432/orders_db
+  
+  kafka:
+    bootstrap-servers: kafka:29092
+  
+  data:
+    redis:
+      host: redis
+
+server:
+  address: 0.0.0.0
+

@@ -1,0 +1,176 @@
+spring:
+  application:
+    name: delivery-service
+  
+  profiles:
+    active: local
+  
+  datasource:
+    url: jdbc:postgresql://localhost:5432/delivery_db
+    username: delivery_user
+    password: delivery_pass
+    driver-class-name: org.postgresql.Driver
+  
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+  
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.add.type.headers: false
+    consumer:
+      group-id: delivery-service
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+  
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+  
+  cache:
+    type: redis
+    redis:
+      time-to-live: 30m
+
+server:
+  port: 8083
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  tracing:
+    sampling:
+      probability: 1.0
+
+# Resilience4j Configuration
+resilience4j:
+  circuitbreaker:
+    instances:
+      default:
+        sliding-window-size: 10
+        minimum-number-of-calls: 5
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 30s
+        permitted-number-of-calls-in-half-open-state: 3
+      
+      location-service:
+        sliding-window-size: 20
+        minimum-number-of-calls: 10
+        failure-rate-threshold: 30
+        wait-duration-in-open-state: 15s
+  
+  retry:
+    instances:
+      default:
+        max-attempts: 3
+        wait-duration: 1s
+        exponential-backoff-multiplier: 2
+      
+      location-update:
+        max-attempts: 5
+        wait-duration: 500ms
+        exponential-backoff-multiplier: 1.2
+  
+  timelimiter:
+    instances:
+      default:
+        timeout-duration: 5s
+      
+      allocation:
+        timeout-duration: 10s
+
+# Logging
+logging:
+  level:
+    com.delivery.delivery: DEBUG
+    org.springframework.kafka: INFO
+    org.hibernate.SQL: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+
+# Custom application properties
+app:
+  delivery:
+    allocation:
+      max-radius-km: 10.0
+      max-concurrent-deliveries: 3
+      allocation-timeout-seconds: 30
+    
+    tracking:
+      location-update-interval-seconds: 30
+      location-cache-ttl-minutes: 5
+      delivery-cache-ttl-minutes: 30
+    
+    geolocation:
+      accuracy-threshold-meters: 100
+      max-location-age-minutes: 10
+  
+  cache:
+    delivery-person-ttl: 15m
+    delivery-ttl: 1h
+    location-ttl: 5m
+  
+  kafka:
+    topics:
+      # Outbound events (published by this service)
+      delivery-allocation-successful: saga.delivery.allocation.successful
+      delivery-allocation-failed: saga.delivery.allocation.failed
+      delivery-person-location-updated: delivery.person.location.updated
+      delivery-location-updated: delivery.location.updated
+      delivery-status-updated: delivery.status.updated
+      delivery-completed: delivery.completed
+      delivery-cancelled: delivery.cancelled
+      
+      # Inbound events (consumed by this service)
+      delivery-allocation-requested: saga.delivery.allocation.requested
+      delivery-compensation-requested: saga.delivery.compensation.requested
+      order-confirmed: order.confirmed
+      order-cancelled: order.cancelled
+
+---
+# Docker profile
+spring:
+  config:
+    activate:
+      on-profile: docker
+  
+  datasource:
+    url: jdbc:postgresql://postgres:5432/delivery_db
+  
+  kafka:
+    bootstrap-servers: kafka:29092
+  
+  data:
+    redis:
+      host: redis
+
+server:
+  address: 0.0.0.0
+

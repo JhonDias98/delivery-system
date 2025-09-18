@@ -1,0 +1,55 @@
+spring:
+  application:
+    name: bff-mobile
+  
+  profiles:
+    active: local
+  
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+server:
+  port: 8085
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+
+# External services
+services:
+  restaurants:
+    url: http://localhost:8081
+  orders:
+    url: http://localhost:8082
+  delivery:
+    url: http://localhost:8083
+  payments:
+    url: http://localhost:8084
+
+---
+spring:
+  config:
+    activate:
+      on-profile: docker
+  
+  data:
+    redis:
+      host: redis
+
+services:
+  restaurants:
+    url: http://restaurants-service:8081
+  orders:
+    url: http://orders-service:8082
+  delivery:
+    url: http://delivery-service:8083
+  payments:
+    url: http://payments-service:8084
+
+server:
+  address: 0.0.0.0
+

@@ -1,0 +1,76 @@
+{
+	"info": {
+		"_postman_id": "a8c8e3c8-9b1e-4b8a-b8e2-8e3c8a9b1e4b",
+		"name": "Delivery System",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Restaurants",
+			"item": [
+				{
+					"name": "Create Restaurant",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Pizzaria do Zé\",\n    \"description\": \"A melhor pizza da cidade\",\n    \"address\": {\n        \"street\": \"Rua das Flores\",\n        \"number\": \"123\",\n        \"neighborhood\": \"Centro\",\n        \"city\": \"São Paulo\",\n        \"state\": \"SP\",\n        \"zipCode\": \"01000-000\"\n    },\n    \"contactInfo\": {\n        \"phone\": \"11999999999\",\n        \"email\": \"contato@pizzariadoze.com\"\n    },\n    \"operatingHours\": {\n        \"openTime\": \"18:00:00\",\n        \"closeTime\": \"23:59:59\",\n        \"operatingDays\": [\"TUESDAY\", \"WEDNESDAY\", \"THURSDAY\", \"FRIDAY\", \"SATURDAY\", \"SUNDAY\"]\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/restaurants",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"restaurants"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Orders",
+			"item": [
+				{
+					"name": "Create Order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"customerId\": \"...\",\n    \"restaurantId\": \"...\",\n    \"deliveryAddress\": {\n        \"street\": \"Avenida Paulista\",\n        \"number\": \"1578\",\n        \"neighborhood\": \"Bela Vista\",\n        \"city\": \"São Paulo\",\n        \"state\": \"SP\",\n        \"zipCode\": \"01310-200\"\n    },\n    \"items\": [\n        {\n            \"menuItemId\": \"...\",\n            \"name\": \"Pizza de Calabresa\",\n            \"price\": 45.00,\n            \"quantity\": 1\n        }\n    ],\n    \"paymentMethod\": \"CREDIT_CARD\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8082/orders",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
+
